@@ -1,0 +1,86 @@
+# from https://hexdocs.pm/phoenix/installation.html
+
+mix local.hex # install mix hex archives
+mix archive.install hex phx_new 1.4.0 # gives us the phx.new target for mix
+mix phx.new mejorarse
+
+# make a new postgres user for the database
+sudo su - postgres
+createuser -d -P mejorarse
+--> password is "postgres"
+
+
+# edit the last portion of dev/config.exs to reflect the above:
+
+	# Configure your database
+	config :mejorarse, Mejorarse.Repo,
+	  username: "mejorarse",
+	  password: "postgres",
+	  database: "mejorarse_dev",
+	  hostname: "localhost",
+	  pool_size: 10
+
+# note that the default environment is dev, but we can override that with
+# MIX_ENV=prod via command line, just like we override PORT, if we want to
+
+
+# put this line in config/dev.exs, so that we can optionally override PORT from command line
+http: [port: System.get_env("PORT") || 4000],
+
+# run the server (run from directory ~/mejorarse/mejorarse)
+PORT=6969 mix phx.server
+
+
+
+################################ setting up nginx ###################################
+cd /etc/nginx/sites-available
+vim mejorarse -->
+	server {
+
+		listen 80;
+		listen [::]:80;
+
+		server_name 45.76.7.26;
+		#server_name mejorarse.anthonygreen17.com;
+
+		location / {
+			proxy_pass http://localhost:6969;
+			proxy_http_version 1.1;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection "upgrade";
+			proxy_set_header Host $host;
+		}
+	}
+
+cd /etc/nginx/sites-enabled
+rm *   # remove all symlinks in the sites-enabled directory
+ln -sf /etc/nginx/sites-available/mejorarse
+systemctl restart nginx
+
+	had to use this command to kill other processes using port 80, not sure what those processes were:
+		sudo fuser -k 80/tcp
+
+
+########################## making a mejorarse service #####################
+sudo su -
+cd /etc/systemd/system
+vim mejorarse.service -->
+	[Unit]
+	Description=Para mejorarse su español - lo aprendamos juntos!
+
+	[Service]
+	Type=simple
+	User=tony
+	Environment="PORT=6969"
+	ExecStart=/bin/bash -c "cd /home/tony/mejorarse/mejorarse && mix phx.server"
+	Restart=on-abort
+
+	[Install]
+	WantedBy=multi-user.target
+
+systemctl enable mejorarse
+systemctl daemon-reload
+systemctl start mejorarse
+
+make sure `PORT=6969 mix phx.server` is runnning, from above
+in a web browser, go to http://45.76.7.26/, you should see the landing page for mejorarse
