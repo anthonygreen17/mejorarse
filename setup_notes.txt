@@ -84,3 +84,8 @@ systemctl start mejorarse
 
 make sure `PORT=6969 mix phx.server` is runnning, from above
 in a web browser, go to http://45.76.7.26/, you should see the landing page for mejorarse
+
+################### Bootstrap CSS setup ######################
+
+follow directions here: https://gist.github.com/eproxus/545618f91983ff302a0a734888e7d01c
+
