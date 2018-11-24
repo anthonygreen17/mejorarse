@@ -6,7 +6,7 @@ defmodule Mejorarse.Accounts do
   import Ecto.Query, warn: false
   alias Mejorarse.Repo
 
-  alias Mejorarse.Accounts.User
+  alias Mejorarse.Accounts.{User, Credential}
 
   @doc """
   Returns the list of users.
@@ -18,7 +18,9 @@ defmodule Mejorarse.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    User
+    |> Repo.all()
+    |> Repo.preload(:credential)
   end
 
   @doc """
@@ -35,7 +37,11 @@ defmodule Mejorarse.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> Repo.get!(id)
+    |> Repo.preload(:credential)
+  end
 
   @doc """
   Creates a user.
@@ -52,6 +58,9 @@ defmodule Mejorarse.Accounts do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+
+    # use the proper changeset for nested Credentials resource
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.insert()
   end
 
@@ -70,6 +79,9 @@ defmodule Mejorarse.Accounts do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+
+    # use the proper changeset for nested Credentials resource
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.update()
   end
 
@@ -101,8 +113,6 @@ defmodule Mejorarse.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
-
-  alias Mejorarse.Accounts.Credential
 
   @doc """
   Returns the list of credentials.

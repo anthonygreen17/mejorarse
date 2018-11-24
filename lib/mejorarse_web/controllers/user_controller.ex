@@ -15,6 +15,7 @@ defmodule MejorarseWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+    require IEx; IEx.pry()
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
@@ -22,6 +23,7 @@ defmodule MejorarseWeb.UserController do
         |> redirect(to: Routes.user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        require IEx; IEx.pry()
         render(conn, "new.html", changeset: changeset)
     end
   end

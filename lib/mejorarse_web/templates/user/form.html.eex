@@ -13,6 +13,26 @@
   <%= text_input f, :username %>
   <%= error_tag f, :username %>
 
+  <div class="form-group">
+    <%= inputs_for f, :credential, fn cf -> %>
+
+      <%= error_tag cf, :password %>
+      <%= label cf, :password, class: "control-label" %>
+      <%= password_input cf, :password, class: "form-control" %>
+
+      <%# internally,  we use a password hash, so any errors will be displayed for that tag %>
+
+      <%= error_tag cf, :password_confirmation %>
+      <%= label cf, :password_confirmation, class: "control-label" %>
+      <%= password_input cf, :password_confirmation, class: "form-control" %>
+
+
+      <%= label cf, :email %>
+      <%= text_input cf, :email %>
+      <%= error_tag cf, :email %>
+    <% end %>
+  </div>
+
   <div>
     <%= submit "Save" %>
   </div>
