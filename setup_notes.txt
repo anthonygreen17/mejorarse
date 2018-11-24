@@ -89,3 +89,15 @@ in a web browser, go to http://45.76.7.26/, you should see the landing page for 
 
 follow directions here: https://gist.github.com/eproxus/545618f91983ff302a0a734888e7d01c
 
+
+
+
+
+############################## adding users #################
+
+mix phx.gen.html Accounts User users name:string username:string:unique
+
+# add Credentials separately - use email and password
+mix phx.gen.context Accounts Credential credentials email:string:unique password_hash:string pw_tries:integer pw_last_try:string user_id:references:users
+
+
