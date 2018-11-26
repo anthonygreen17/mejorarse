@@ -23,10 +23,10 @@ defmodule MejorarseWeb.Router do
 
     resources "/users", UserController
 
-    resources "/sessions", SessionController, only: [:create, :delete],
-                                              singleton: true
-    # post "/sessions", SessionController, :login, singleton: true
-    # delete "/sessions", SessionController, :logout, singleton: true
+    # resources "/sessions", SessionController, only: [:create, :delete],
+                                              # singleton: true
+    post "/sessions", SessionController, :login, singleton: true
+    delete "/sessions", SessionController, :logout, singleton: true
 
   end
 

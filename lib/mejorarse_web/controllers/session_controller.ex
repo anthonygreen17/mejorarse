@@ -5,7 +5,7 @@ defmodule MejorarseWeb.SessionController do
 
   # Allow users to login with either their email or their username
   # does the "user" map need to be here? or can we pattern match the inner map...
-  def create(conn, %{"user" => %{"username_or_email" => username_or_email, "password" => password}}) do
+  def login(conn, %{"user" => %{"username_or_email" => username_or_email, "password" => password}}) do
     user = User.get_and_auth_user(username_or_email, password)
     cond do
       user != nil ->
@@ -21,7 +21,7 @@ defmodule MejorarseWeb.SessionController do
     end
   end
 
-  def delete(conn, _params) do
+  def logout(conn, _params) do
     require IEx; IEx.pry()
     conn
     |> put_session(:user_id, nil)
@@ -30,29 +30,3 @@ defmodule MejorarseWeb.SessionController do
   end
 
 end
-
-#   def new(conn, _) do
-#     render(conn, "new.html")
-#   end
-
-#   def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
-#     case Accounts.authenticate_by_email_password(email, password) do
-#       {:ok, user} ->
-#         conn
-#         |> put_flash(:info, "Welcome back!")
-#         |> put_session(:user_id, user.id)
-#         |> configure_session(renew: true)
-#         |> redirect(to: "/")
-#       {:error, :unauthorized} ->
-#         conn
-#         |> put_flash(:error, "Bad email/password combination")
-#         |> redirect(to: Routes.session_path(conn, :new))
-#     end
-#   end
-
-#   def delete(conn, _) do
-#     conn
-#     |> configure_session(drop: true)
-#     |> redirect(to: "/")
-#   end
-# end
