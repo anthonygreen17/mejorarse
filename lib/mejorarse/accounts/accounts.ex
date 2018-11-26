@@ -207,4 +207,20 @@ defmodule Mejorarse.Accounts do
   def change_credential(%Credential{} = credential) do
     Credential.changeset(credential, %{})
   end
+
+
+  def get_user_by_email(email) do
+    case Repo.get_by(Credential, email: email) do
+      nil -> nil
+      cred -> Repo.get!(User, cred.user_id) |> Repo.preload(:credential)
+    end
+  end
+
+  def get_user_by_username(username) do
+    case Repo.get_by(User, username: username) do
+      nil -> nil
+      user -> Repo.preload(user, :credential)
+    end
+
+  end
 end

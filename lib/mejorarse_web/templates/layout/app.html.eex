@@ -22,7 +22,7 @@
 
 
     <nav class="navbar navbar-dark bg-secondary navbar-expand-md">
-      <%= link("Home", to: "/") %>
+      <%= link("Home", to: Routes.page_path(@conn, :index)) %>
 
       <button class="navbar-toggler" type="button"
               data-toggle="collapse" data-target="#main-navbar">
@@ -31,11 +31,35 @@
 
       <div class="collapse navbar-collapse" id="main-navbar">
         <ul class="navbar-nav mr-auto">
+          <%= if @current_user do %>
             <li class="nav-item active">
+              <%= link "My Profile", to: Routes.user_path(@conn, :show, @current_user.id),
+                                   class: "nav-link" %>
             </li>
+          <% end %>
         </ul>
       </div>
 
+      <%= if @current_user do %>
+
+        <span class="text-light">
+          @<%= @current_user.username %>
+          <%= link("logout", to: Routes.session_path(@conn, :delete), method: :delete) %>
+        </span>
+
+    <% else %>
+
+      <div class="col-md-8">
+
+        <%= form_for @conn, Routes.session_path(@conn, :create), [as: "user", class: "form-inline"], fn f -> %>
+          <%= text_input f, :username_or_email,  placeholder: "username/email", class: "form-control" %>
+          <%= password_input f, :password, placeholder: "password", class: "form-control" %>
+          <%= submit "Log in", class: "btn btn-primary" %>
+          <%= link "Sign Up", to: Routes.user_path(@conn, :new), class: "btn btn-primary" %>
+        <% end %>
+      </div>
+
+    <% end %>
     </nav>
 
       <%= if get_flash(@conn, :info) do %>
@@ -49,8 +73,7 @@
         <%= render @view_module, @view_template, assigns %>
       </main>
 
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
-
 
 </html>
