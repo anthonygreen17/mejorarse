@@ -17,8 +17,12 @@ defmodule Mejorarse.Content do
       [%Flashcard{}, ...]
 
   """
-  def list_flashcards do
-    Repo.all(Flashcard)
+  def list_flashcards(user_id) do
+    cards = Repo.all(from f in Flashcard, where: f.user_id == ^user_id)
+    case cards do
+      nil   -> []
+      _else -> List.flatten([cards]) # don't return a nested list
+    end
   end
 
   @doc """

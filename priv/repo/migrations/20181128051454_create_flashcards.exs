@@ -5,9 +5,7 @@ defmodule Mejorarse.Repo.Migrations.CreateFlashcards do
     create table(:flashcards) do
       add :foreign_text, :string
       add :english_text, :string
-
-      # delete flashcards for a user when the user is deleted
-      add :user_id, references(:users, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :nothing)
 
       timestamps()
     end

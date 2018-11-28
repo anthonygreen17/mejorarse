@@ -1,0 +1,27 @@
+<h1>Listing Flashcards</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Foreign text</th>
+      <th>English text</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for flashcard <- @flashcards do %>
+    <tr>
+      <td><%= flashcard.foreign_text %></td>
+      <td><%= flashcard.english_text %></td>
+
+      <td>
+        <%= link "Show", to: Routes.user_flashcard_path(@conn, :show, flashcard, @user.id) %>
+        <%= link "Edit", to: Routes.user_flashcard_path(@conn, :edit, flashcard, @user.id) %>
+        <%= link "Delete", to: Routes.user_flashcard_path(@conn, :delete, flashcard, @user.id), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Flashcard", to: Routes.user_flashcard_path(@conn, :new, @current_user) %></span>

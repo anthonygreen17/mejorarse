@@ -1,0 +1,18 @@
+<h1>Show Flashcard</h1>
+
+<ul>
+
+  <li>
+    <strong>Foreign text:</strong>
+    <%= @flashcard.foreign_text %>
+  </li>
+
+  <li>
+    <strong>English text:</strong>
+    <%= @flashcard.english_text %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.user_flashcard_path(@conn, :edit, @flashcard, @current_user) %></span>
+<span><%= link "Back", to: Routes.user_flashcard_path(@conn, :index, @current_user) %></span>

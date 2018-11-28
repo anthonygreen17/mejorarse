@@ -4,6 +4,8 @@ defmodule Mejorarse.Repo.Migrations.CreateFlashcardlabels do
   def change do
     create table(:flashcardlabels) do
       add :label, :string
+
+      # we dont want to delete a label if the user deletes a flashcard
       add :flashcard_id, references(:flashcards, on_delete: :nothing)
 
       timestamps()

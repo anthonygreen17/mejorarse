@@ -21,7 +21,9 @@ defmodule MejorarseWeb.Router do
 
     get "/", PageController, :index
 
-    resources "/users", UserController
+    resources "/users", UserController do
+      resources "/flashcards", FlashcardController
+    end
 
     # resources "/sessions", SessionController, only: [:create, :delete],
                                               # singleton: true
